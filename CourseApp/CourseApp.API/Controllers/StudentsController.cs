@@ -76,7 +76,7 @@ public class StudentsController : ControllerBase
             return Ok(result);
         }
         // KOLAY: Noktalı virgül eksikliği
-        return BadRequest(result) // TYPO: ; eksik
+        return BadRequest(result); // TYPO: ; eksik
     }
 
     [HttpPut]

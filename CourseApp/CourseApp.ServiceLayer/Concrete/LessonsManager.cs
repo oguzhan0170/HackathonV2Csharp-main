@@ -56,7 +56,7 @@ public class LessonsManager : ILessonService
         }
 
         // KOLAY: Noktalı virgül eksikliği
-        return new ErrorResult(ConstantsMessages.LessonCreateFailedMessage) // TYPO: ; eksik
+        return new ErrorResult(ConstantsMessages.LessonCreateFailedMessage); // TYPO: ; eksik
     }
 
     public async Task<IResult> Remove(DeleteLessonDto entity)
