@@ -2,7 +2,7 @@
 
 public class Lesson : BaseEntity
 {
-    public string? Title { get; set; }
+    public string? Name { get; set; } // tile yerine NAme olarak değiştirdm
     public DateTime Date { get; set; }
     public byte Duration { get; set; }
     public string? Content { get; set; }
