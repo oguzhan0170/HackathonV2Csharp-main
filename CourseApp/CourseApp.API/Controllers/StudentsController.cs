@@ -83,8 +83,8 @@ public class StudentsController : ControllerBase
     public async Task<IActionResult> Update([FromBody] UpdateStudentDto updateStudentDto)
     {
         // KOLAY: Değişken adı typo - updateStudentDto yerine updateStudntDto
-        var name = updateStudntDto.Name; // TYPO
-        
+        var name = updateStudentDto.Name; // TYPO
+
         var result = await _studentService.Update(updateStudentDto);
         if (result.Success)
         {
