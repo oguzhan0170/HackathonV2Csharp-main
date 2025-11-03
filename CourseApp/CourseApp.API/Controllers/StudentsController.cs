@@ -62,8 +62,9 @@ public class StudentsController : ControllerBase
     {
         // ORTA: Null check eksik
         // ORTA: Tip dönüşüm hatası - string'i int'e direkt atama
-        var invalidAge = (int)createStudentDto.Name; // ORTA: InvalidCastException - string int'e dönüştürülemez
-        
+        var invalidAge = createStudentDto.Surname;  // ORTA: InvalidCastException - string int'e dönüştürülemez
+        //CreateStudtenDTO da Age ile ilgi bir yer olmadığı için invildeAge anlamsız kalıyordu onu Surname ile değiştirdim.
+
         // ZOR: Katman ihlali - Controller'dan direkt DbContext'e erişim (Business Logic'i bypass ediyor)
         var directDbAccess = _dbContext.Students.Add(new CourseApp.EntityLayer.Entity.Student 
         { 
