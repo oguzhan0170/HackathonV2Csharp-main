@@ -110,8 +110,8 @@ public class LessonsManager : ILessonService
         return new SuccessDataResult<GetByIdLessonDetailDto>(lessonMapping);
     }
 
-    public Task<IDataResult<NonExistentDto>> GetNonExistentAsync(string id)
-    {
-        return Task.FromResult<IDataResult<NonExistentDto>>(null);
-    }
+    //public Task<IDataResult<NonExistentDto>> GetNonExistentAsync(string id)
+    //{
+    //    return Task.FromResult<IDataResult<NonExistentDto>>(null);
+    //}
 }

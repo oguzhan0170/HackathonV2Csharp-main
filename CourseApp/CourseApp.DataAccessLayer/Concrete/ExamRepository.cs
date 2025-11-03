@@ -12,6 +12,6 @@ public class ExamRepository : GenericRepository<Exam>, IExamRepository
 
     public void InvalidMethod()
     {
-        var x = ExamHelperUtility.Execute();
+        //var x = ExamHelperUtility.Execute();
     }
 }

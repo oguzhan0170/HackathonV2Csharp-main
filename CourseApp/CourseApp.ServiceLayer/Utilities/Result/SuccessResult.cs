@@ -1,4 +1,6 @@
-﻿namespace CourseApp.ServiceLayer.Utilities.Result;
+﻿using CourseApp.BusinessLayer.Utilities.Helpers;
+
+namespace CourseApp.ServiceLayer.Utilities.Result;
 
 public class SuccessResult:Result
 {

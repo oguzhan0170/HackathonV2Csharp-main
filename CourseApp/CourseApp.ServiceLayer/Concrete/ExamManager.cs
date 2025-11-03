@@ -33,10 +33,10 @@ public class ExamManager : IExamService
         return new SuccessDataResult<IEnumerable<GetAllExamDto>>(examtListMapping, ConstantsMessages.ExamListSuccessMessage);
     }
 
-    public void NonExistentMethod()
-    {
-        var x = new MissingType();
-    }
+    //public void NonExistentMethod()
+   // {
+  //      var x = new MissingType();
+    //}
 
     public async Task<IDataResult<GetByIdExamDto>> GetByIdAsync(string id, bool track = true)
     {

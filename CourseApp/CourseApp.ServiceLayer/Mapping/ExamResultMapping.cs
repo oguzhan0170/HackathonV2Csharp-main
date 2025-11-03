@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CourseApp.EntityLayer.Dto.ExamResultDto;
 using CourseApp.EntityLayer.Entity;
+using CourseApp.BusinessLayer.Utilities.Helpers;
+
 
 namespace CourseApp.ServiceLayer.Mapping;
 

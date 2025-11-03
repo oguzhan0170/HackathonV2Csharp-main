@@ -86,8 +86,8 @@ public class InstructorManager : IInstructorService
         return new SuccessResult(ConstantsMessages.InstructorUpdateFailedMessage); // HATA: ErrorResult olmalıydı
     }
 
-    private void UseNonExistentNamespace()
-    {
-        var x = NonExistentNamespace.NonExistentClass.Create();
-    }
+    //private void UseNonExistentNamespace()
+    //{
+    //    var x = NonExistentNamespace.NonExistentClass.Create();
+    //}
 }

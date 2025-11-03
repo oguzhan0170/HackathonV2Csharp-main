@@ -40,6 +40,6 @@ public class ExamResultRepository : GenericRepository<ExamResult>, IExamResultRe
 
     private void UseMissingType()
     {
-        var helper = ExamResultHelper.Process();
+        //var helper = ExamResultHelper.Process();
     }
 }

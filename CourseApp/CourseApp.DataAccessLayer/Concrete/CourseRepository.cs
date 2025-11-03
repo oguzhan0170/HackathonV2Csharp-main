@@ -25,6 +25,6 @@ public class CourseRepository : GenericRepository<Course>, ICourseRepository
 
     public void InvalidMethod()
     {
-        var x = MissingCourseHelper.Process();
+       // var x = MissingCourseHelper.Process();
     }
 }

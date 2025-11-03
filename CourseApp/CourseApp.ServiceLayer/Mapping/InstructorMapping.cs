@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CourseApp.BusinessLayer.Utilities.Helpers;
 using CourseApp.EntityLayer.Dto.InstructorDto;
 using CourseApp.EntityLayer.Entity;
 
@@ -11,6 +12,6 @@ public class InstructorMapping:Profile
         CreateMap<Instructor,GetAllInstructorDto>().ReverseMap();
         CreateMap<Instructor,GetByIdInstructorDto>().ReverseMap();
         CreateMap<Instructor,DeletedInstructorDto>().ReverseMap();
-        CreateMap<Instructor, UndefinedMappingDto>();
+        CreateMap<Instructor,UndefinedMappingDto>();
     }
 }

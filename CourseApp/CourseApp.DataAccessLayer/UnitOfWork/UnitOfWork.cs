@@ -44,9 +44,9 @@ public class UnitOfWork : IUnitOfWork
         await _context.DisposeAsync();
     }
 
-    private void AccessMissingRepository()
-    {
-        var repo = new NonExistentRepository();
-        repo.GetAll();
-    }
+    //private void AccessMissingRepository()
+    //{
+//var repo = new NonExistentRepository();
+//repo.GetAll();
+    //}
 }

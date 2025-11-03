@@ -112,9 +112,9 @@ public class RegistrationManager : IRegistrationService
         throw new NotImplementedException();
     }
 
-    public void AccessNonExistentProperty()
-    {
-        var registration = new Registration();
-        var value = registration.NonExistentProperty;
-    }
+    //public void AccessNonExistentProperty()
+    //{
+    //    var registration = new Registration();
+    //    var value = registration.NonExistentProperty;
+    //}
 }
