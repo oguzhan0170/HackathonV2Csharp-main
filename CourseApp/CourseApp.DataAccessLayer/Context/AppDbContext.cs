@@ -1,7 +1,7 @@
 ﻿using CourseApp.EntityLayer.Entity;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseApp.DataAccessLayer.Concrete;
+namespace CourseApp.DataAccessLayer.Context;
 
 public sealed class AppDbContext : DbContext
 {

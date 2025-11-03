@@ -2,7 +2,7 @@ using CourseApp.EntityLayer.Dto.StudentDto;
 using CourseApp.ServiceLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
 // KOLAY: Eksik using - System.Text.Json kullanılıyor ama using yok
-using CourseApp.DataAccessLayer.Concrete; // ZOR: Katman ihlali - Controller'dan direkt DataAccessLayer'a erişim
+using CourseApp.DataAccessLayer.Context; // ZOR: Katman ihlali - Controller'dan direkt DataAccessLayer'a erişim
 
 namespace CourseApp.API.Controllers;
 
