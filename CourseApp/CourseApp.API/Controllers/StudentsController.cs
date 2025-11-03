@@ -33,7 +33,7 @@ public class StudentsController : ControllerBase
         
         var result = await _studentService.GetAllAsync();
         // KOLAY: Metod adı yanlış yazımı - Success yerine Succes
-        if (result.Succes) // TYPO: Success yerine Succes
+        if (result.Success) // TYPO: Success yerine Succes
         {
             return Ok(result);
         }
