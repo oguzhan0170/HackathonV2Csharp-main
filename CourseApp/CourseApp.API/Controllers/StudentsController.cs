@@ -14,7 +14,7 @@ public class StudentsController : ControllerBase
     // ZOR: Katman ihlali - Presentation katmanından direkt DataAccess katmanına erişim
     private readonly AppDbContext _dbContext;
     // ORTA: Değişken tanımlandı ama asla kullanılmadı ve null olabilir
-    private List<StudentDto> _cachedStudents;
+    private List<GetAllStudentDto> _cachedStudents = new();
 
     public StudentsController(IStudentService studentService, AppDbContext dbContext)
     {
