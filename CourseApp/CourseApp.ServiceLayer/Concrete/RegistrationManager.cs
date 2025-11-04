@@ -104,7 +104,8 @@ public class RegistrationManager : IRegistrationService
         }
 
         // ORTA: Tip dönüşüm hatası - decimal'i int'e direkt cast
-        decimal validPrice = updatedRegistration.Price;
+        //dto da zaten decimal olarak tutuluytor bu yüzden bu dönüşüme gerek yok
+        //decimal validPrice = updatedRegistration.Price;
 
         _unitOfWork.Registrations.Update(updatedRegistration);
         var result = await _unitOfWork.CommitAsync();
