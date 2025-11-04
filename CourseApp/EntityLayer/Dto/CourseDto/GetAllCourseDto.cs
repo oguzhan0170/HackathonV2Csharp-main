@@ -9,4 +9,7 @@ public class GetAllCourseDto
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string? InstructorID { get; set; }
+    // tek sorguada çekilmesi için 
+    public string? InstructorName { get; set; }
+
 }
