@@ -44,12 +44,33 @@ public class StudentsController : ControllerBase
     public async Task<IActionResult> GetById(string id)
     {
         // ORTA: Null check eksik - id null/empty olabilir
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return BadRequest("Geçersiz ID değeri yok.");
+        }
+
         // ORTA: Index out of range riski - string.Length kullanımı yanlış olabilir
-        var studentId = id[10]; // ORTA: id 10 karakterden kısa olursa IndexOutOfRangeException
-        
+        //id length 10 dan kısa olması durumları
+        if (id.Length <= 10)
+        {
+            return BadRequest("ID kısa.");
+        }
+        var studentIdPrefix = id[10];
+
         var result = await _studentService.GetByIdAsync(id);
+
         // ORTA: Null reference exception - result.Data null olabilir
-        var studentName = result.Data.Name; // Null check yok
+        if (result.Data == null)
+        {
+            return NotFound("Öğrenci bulunamadı.");
+        }
+
+        // Null check , isim kontrolü
+        if (string.IsNullOrWhiteSpace(result.Data.Name))
+        {
+            result.Data.Name = "Bilinmiyor";
+        }
+        var studentName = result.Data.Name; 
         if (result.Success)
         {
             return Ok(result);
