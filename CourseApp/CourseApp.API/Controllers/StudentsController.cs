@@ -81,9 +81,14 @@ public class StudentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateStudentDto createStudentDto)
     {
-        // ORTA: Null check eksik
+        // Null check eklendi
+        if (createStudentDto == null)
+        {
+            return BadRequest("Öğrenci bilgileri eksik veya geçersiz.");
+        }
         // ORTA: Tip dönüşüm hatası - string'i int'e direkt atama
-        var invalidAge = createStudentDto.Surname;  // ORTA: InvalidCastException - string int'e dönüştürülemez
+        //hatalı tip dönüşü çıkarıldı
+        //var invalidAge = createStudentDto.Surname;  // ORTA: InvalidCastException - string int'e dönüştürülemez
         //CreateStudtenDTO da Age ile ilgi bir yer olmadığı için invildeAge anlamsız kalıyordu onu Surname ile değiştirdim.
 
         // ZOR: Katman ihlali - Controller'dan direkt DbContext'e erişim (Business Logic'i bypass ediyor)
@@ -118,8 +123,17 @@ public class StudentsController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] DeleteStudentDto deleteStudentDto)
     {
-        // ORTA: Null reference - deleteStudentDto null olabilir
-        var id = deleteStudentDto.Id; // Null check yok
+        // deleteStudentDto null  check
+        if (deleteStudentDto == null)
+        {
+            return BadRequest("Silinecek öğrenci bilgisi bulunamadı.");
+        }
+        // stribg kontrolü
+        if (string.IsNullOrWhiteSpace(deleteStudentDto.Id))
+        {
+            return BadRequest("Geçersiz ID.");
+        }
+        var id = deleteStudentDto.Id; 
         
         // ZOR: Memory leak - DbContext Dispose edilmiyor
         var tempContext = new AppDbContext(new Microsoft.EntityFrameworkCore.DbContextOptions<AppDbContext>());
