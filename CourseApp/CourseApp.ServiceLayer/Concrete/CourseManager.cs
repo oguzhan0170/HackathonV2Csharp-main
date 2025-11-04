@@ -21,10 +21,10 @@ public class CourseManager : ICourseService
 
     public async Task<IDataResult<IEnumerable<GetAllCourseDto>>> GetAllAsync(bool track = true)
     {
-        // ZOR: N+1 Problemi - Her course için Instructor ayrı sorgu ile çekiliyor
-        var courseList = await _unitOfWork.Courses.GetAll(false).ToListAsync();
-        
-        // ZOR: N+1 - Include/ThenInclude kullanılmamış, lazy loading aktif
+        // sorgu için Instructor eklendi
+        var courseList = await _unitOfWork.Courses.GetAll(false).AsNoTracking().Include(c => c.Instructor).ToListAsync();
+
+        // .Include(c => c.Instructor) ile tek sorguda tüm veriler yüklendi.
         var result = courseList.Select(course => new GetAllCourseDto
         {
             CourseName = course.CourseName,
@@ -32,7 +32,8 @@ public class CourseManager : ICourseService
             EndDate = course.EndDate,
             Id = course.ID,
             InstructorID = course.InstructorID,
-            // ZOR: Her course için ayrı sorgu - course.Instructor?.Name çekiliyor
+            // ınculde ile tek sorguda çekilmesi için tanımlnadı
+            InstructorName = course.Instructor?.Name ?? "",
             // ?? false ile boş değerlerini atlar
             IsActive = course?.IsActive ?? false,
             StartDate = course.StartDate
@@ -141,11 +142,10 @@ public class CourseManager : ICourseService
 
     public async Task<IDataResult<IEnumerable<GetAllCourseDetailDto>>> GetAllCourseDetail(bool track = true)
     {
-        // ZOR: N+1 Problemi - Include kullanılmamış, lazy loading aktif
-        var courseListDetailList = await _unitOfWork.Courses.GetAllCourseDetail(false).ToListAsync();
+        //Include(c => c.Instructor) eklendi
+        var courseListDetailList = await _unitOfWork.Courses.GetAllCourseDetail(false).AsNoTracking().Include(c => c.Instructor).ToListAsync();
 
-        // ZOR: N+1 - Her course için Instructor ayrı sorgu ile çekiliyor (x.Instructor?.Name)
-        var courseDetailDtoList = courseListDetailList.Select(x => new GetAllCourseDetailDto // KOLAY: Yanlış tip - GetAllCourseDetailDto olmalıydı
+        var courseDetailDtoList = courseListDetailList.Select(x => new GetAllCourseDetailDto
         {
             CourseName = x.CourseName,
             StartDate = x.StartDate,
@@ -153,10 +153,10 @@ public class CourseManager : ICourseService
             CreatedDate = x.CreatedDate,
             Id = x.ID,
             InstructorID = x.InstructorID,
-            // ZOR: N+1 - Her course için ayrı Instructor sorgusu
-            InstructorName = x.Instructor?.Name ?? "", // Lazy loading aktif - her iterasyonda DB sorgusu
+            // ınstructor bilgisinden Name alınıyor
+            InstructorName = x.Instructor?.Name ?? "",
             IsActive = x.IsActive,
-        });
+        }).ToList();
 
         // ORTA: Null reference - courseDetailDtoList null olabilir
         var firstDetail = courseDetailDtoList.First(); // Null/Empty durumunda exception
