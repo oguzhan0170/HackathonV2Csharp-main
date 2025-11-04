@@ -49,11 +49,17 @@ public class StudentManager : IStudentService
         if(entity == null) return new ErrorResult("Null");
 
         // ORTA: Tip dönüşüm hatası - string'i int'e direkt cast
-        var invalidConversion = Convert.ToInt32(entity.TC); // ORTA: InvalidCastException - string int'e dönüştürülemez
+        //dto da strişng olarak tutulduğu için gerek yok dönüştürmeye
+        //var invalidConversion = Convert.ToInt32(entity.TC); // ORTA: InvalidCastException - string int'e dönüştürülemez
 
         var createdStudent = _mapper.Map<Student>(entity);
-        // ORTA: Null reference - createdStudent null olabilir
-        var studentName = createdStudent.Name; // Null check yok
+        // Null check eklendi
+        if (createdStudent == null)
+        {
+            return new ErrorResult("Öğrenci oluşturulamadı.");
+        }
+
+        var studentName = createdStudent.Name; 
         
         await _unitOfWork.Students.CreateAsync(createdStudent);
         // ZOR: Async/await anti-pattern - .Result kullanımı deadlock'a sebep olabilir
