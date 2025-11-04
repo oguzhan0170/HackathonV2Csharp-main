@@ -22,8 +22,8 @@ public class ExamManager : IExamService
 
     public async Task<IDataResult<IEnumerable<GetAllExamDto>>> GetAllAsync(bool track = true)
     {
-        // ZOR: Async/await anti-pattern - async metot içinde senkron ToList kullanımı
-        var examList = _unitOfWork.Exams.GetAll(false).ToList(); // ZOR: ToListAsync kullanılmalıydı
+        //ToList yerine ToListAsync kullanılmalıydı
+        var examList = _unitOfWork.Exams.GetAll(false).ToListAsync(); 
         // KOLAY: Değişken adı typo - examtListMapping yerine examListMapping
         var examtListMapping = _mapper.Map<IEnumerable<GetAllExamDto>>(examList); // TYPO
 
