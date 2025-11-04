@@ -70,8 +70,8 @@ public class LessonsManager : ILessonService
      
         var lessonName = createdLesson.Name; 
         
-        // ZOR: Async/await anti-pattern - GetAwaiter().GetResult() deadlock'a sebep olabilir
-        _unitOfWork.Lessons.CreateAsync(createdLesson).GetAwaiter().GetResult(); // ZOR: Anti-pattern
+        //GetAwaiter().GetResult() kaldırıldı, await ile askeron yapıldı
+        await _unitOfWork.Lessons.CreateAsync(createdLesson); 
         var result = await _unitOfWork.CommitAsync();
         if (result > 0)
         {
