@@ -102,12 +102,12 @@ public class ExamResultManager : IExamResultService
 
     public async Task<IDataResult<IEnumerable<GetAllExamResultDetailDto>>> GetAllExamResultDetailAsync(bool track = true)
     {
-        // ZOR: N+1 Problemi - Include kullanılmamış, lazy loading aktif
-        var examResultList = await _unitOfWork.ExamResults.GetAllExamResultDetail(false).ToListAsync();
-        
+        // .Include(er => er.Student) ve .Include(er => er.Exam) ile birlikte student ve exam aynı sorguda çeklcek
+        var examResultList = await _unitOfWork.ExamResults.GetAllExamResultDetail(false).Include(er => er.Student).Include(er => er.Exam).AsNoTracking().ToListAsync();
+
         // ZOR: N+1 - Her examResult için Student ve Exam ayrı sorgu ile çekiliyor
         // Örnek: examResult.Student?.Name ve examResult.Exam?.Name her iterasyonda DB sorgusu
-        
+
         if (!examResultList.Any())
         {
             return new ErrorDataResult<IEnumerable<GetAllExamResultDetailDto>>(null, ConstantsMessages.ExamResultListFailedMessage);
