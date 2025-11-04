@@ -127,17 +127,14 @@ public class LessonsManager : ILessonService
 
     public async Task<IDataResult<IEnumerable<GetAllLessonDetailDto>>> GetAllLessonDetailAsync(bool track = true)
     {
-        // ZOR: N+1 Problemi - Include kullanılmamış, lazy loading aktif
-        var lessonList = await _unitOfWork.Lessons.GetAllLessonDetails(false).ToListAsync();
+        // .Include(l => l.Course) eklendi 
+        var lessonList = await _unitOfWork.Lessons.GetAllLessonDetails(false).AsNoTracking().Include(l => l.Course).ToListAsync();
 
         // ZOR: N+1 - Her lesson için Course ayrı sorgu ile çekiliyor (lesson.Course?.CourseName)
         //null check
         if (lessonList == null || !lessonList.Any())
         {
-            return new ErrorDataResult<IEnumerable<GetAllLessonDetailDto>>(
-                null,
-                ConstantsMessages.LessonListFailedMessage
-            );
+            return new ErrorDataResult<IEnumerable<GetAllLessonDetailDto>>(null,ConstantsMessages.LessonListFailedMessage);
         }
         var lessonsListMapping = _mapper.Map<IEnumerable<GetAllLessonDetailDto>>(lessonList);
 
