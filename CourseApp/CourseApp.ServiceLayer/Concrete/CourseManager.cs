@@ -38,7 +38,11 @@ public class CourseManager : ICourseService
             StartDate = course.StartDate
         }).ToList();
 
-        // ORTA: Index out of range - result boş olabilir
+        // result boş olup olmadığı kontorl eddilecek
+        if (result == null || !result.Any())
+        {
+            return new ErrorDataResult<IEnumerable<GetAllCourseDto>>(null, "Kurs listesi boş veya bulunamadı.");
+        }
         var firstCourse = result[0]; // IndexOutOfRangeException riski
 
         return new SuccessDataResult<IEnumerable<GetAllCourseDto>>(result, ConstantsMessages.CourseListSuccessMessage);
