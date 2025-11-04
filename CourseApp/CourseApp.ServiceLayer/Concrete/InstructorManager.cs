@@ -32,15 +32,35 @@ public class InstructorManager : IInstructorService
 
     public async Task<IDataResult<GetByIdInstructorDto>> GetByIdAsync(string id, bool track = true)
     {
-        // ORTA: Null check eksik - id null/empty olabilir
-        // ORTA: Index out of range - id çok kısa olabilir
-        var idPrefix = id[5]; // IndexOutOfRangeException riski
+        // Null check eklendi
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return new ErrorDataResult<GetByIdInstructorDto>(null, "Instructor ID boş olamaz.");
+        }
+
+        // id uzunluğu kontorlu
+        if (id.Length <= 5)
+        {
+            return new ErrorDataResult<GetByIdInstructorDto>(null, "ID kısa.");
+        }
+
+        var idPrefix = id[5]; // IndexOutOfRangeException riski kalldrıdıl
         
         var hasInstructor = await _unitOfWork.Instructors.GetByIdAsync(id, false);
-        // ORTA: Null reference - hasInstructor null olabilir ama kontrol edilmiyor
+        //ınstructor false ise
+        if (hasInstructor == null)
+        {
+            return new ErrorDataResult<GetByIdInstructorDto>(null, "Instructor bulunamadı.");
+        }
+        
         var hasInstructorMapping = _mapper.Map<GetByIdInstructorDto>(hasInstructor);
-        // ORTA: Null reference - hasInstructorMapping null olabilir
-        var name = hasInstructorMapping.Name; // Null reference riski
+        // hasInstructorMapping null check
+        if (hasInstructorMapping == null)
+        {
+            return new ErrorDataResult<GetByIdInstructorDto>(null, "Instructor yok.");
+        }
+
+        var name = hasInstructorMapping.Name; 
         return new SuccessDataResult<GetByIdInstructorDto>(hasInstructorMapping, ConstantsMessages.InstructorGetByIdSuccessMessage);
     }
 
@@ -71,9 +91,19 @@ public class InstructorManager : IInstructorService
 
     public async Task<IResult> Update(UpdatedInstructorDto entity)
     {
-        // ORTA: Null check eksik - entity null olabilir
+        // O Null check eklenid
+        if (entity == null)
+        {
+            return new ErrorResult("Güncelleme işlemi için geçersiz.");
+        }
+
         var updatedInstructor = _mapper.Map<Instructor>(entity);
-        // ORTA: Null reference - updatedInstructor null olabilir
+
+        //updatedInstructor null check
+        if (updatedInstructor == null)
+        {
+            return new ErrorResult("Instructor işlemi başarısız.");
+        }
         var instructorName = updatedInstructor.Name; // Null reference riski
         
         _unitOfWork.Instructors.Update(updatedInstructor);
@@ -82,12 +112,12 @@ public class InstructorManager : IInstructorService
         {
             return new SuccessResult(ConstantsMessages.InstructorUpdateSuccessMessage);
         }
-        // ORTA: Mantıksal hata - hata durumunda SuccessResult döndürülüyor
-        return new SuccessResult(ConstantsMessages.InstructorUpdateFailedMessage); // HATA: ErrorResult olmalıydı
+        // ErrorResult ile değiştirildi
+        return new ErrorResult(ConstantsMessages.InstructorUpdateFailedMessage); 
     }
 
     //private void UseNonExistentNamespace()
     //{
-    //    var x = NonExistentNamespace.NonExistentClass.Create();
+     //   var x = NonExistentNamespace.NonExistentClass.Create();
     //}
 }
