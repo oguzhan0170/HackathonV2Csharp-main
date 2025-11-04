@@ -26,9 +26,13 @@ public class ExamManager : IExamService
         var examList = _unitOfWork.Exams.GetAll(false).ToList(); // ZOR: ToListAsync kullanılmalıydı
         // KOLAY: Değişken adı typo - examtListMapping yerine examListMapping
         var examtListMapping = _mapper.Map<IEnumerable<GetAllExamDto>>(examList); // TYPO
-        
-        // ORTA: Index out of range - examtListMapping boş olabilir
-        var firstExam = examtListMapping.ToList()[0]; // IndexOutOfRangeException riski
+
+        //null check ile IndexOutOfRangeException riski kaldırıldı
+        if (examtListMapping == null || !examtListMapping.Any())
+        {
+            return new ErrorDataResult<IEnumerable<GetAllExamDto>>(null, "Sınav listesi bulunamadı veya boş.");
+        }
+        var firstExam = examtListMapping.ToList()[0]; 
         
         return new SuccessDataResult<IEnumerable<GetAllExamDto>>(examtListMapping, ConstantsMessages.ExamListSuccessMessage);
     }
@@ -46,14 +50,23 @@ public class ExamManager : IExamService
     }
     public async Task<IResult> CreateAsync(CreateExamDto entity)
     {
-        // ORTA: Null check eksik - entity null olabilir
+        // mapperdan gelen nesneye Null kontrolü eklendi
+        if (entity == null)
+        {
+            return new ErrorResult("Sınav boş.");
+        }
         var addedExamMapping = _mapper.Map<Exam>(entity);
-        
-        // ORTA: Null reference - addedExamMapping null olabilir
-        var examName = addedExamMapping.Name; // Null reference riski
-        
+
+        // addedExamMapping null checkj eklndi
+        if (addedExamMapping == null)
+        {
+            return new ErrorResult("Sınav verisi yok.");
+        }
+        var examName = addedExamMapping.Name; 
+
         // ZOR: Async/await anti-pattern - async metot içinde .Wait() kullanımı deadlock'a sebep olabilir
-        _unitOfWork.Exams.CreateAsync(addedExamMapping).Wait(); // ZOR: Anti-pattern - await kullanılmalıydı
+        // Wait await ile değiştirildi
+        await _unitOfWork.Exams.CreateAsync(addedExamMapping);
         var result = await _unitOfWork.CommitAsync();
         if (result > 0)
         {

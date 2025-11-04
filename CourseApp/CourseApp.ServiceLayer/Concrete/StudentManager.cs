@@ -80,21 +80,30 @@ public class StudentManager : IStudentService
 
     public async Task<IResult> Update(UpdateStudentDto entity)
     {
-        // ORTA: Null check eksik - entity null olabilir
+        // Null check eklendi
+        if (entity == null)
+        {
+            return new ErrorResult("Güncelleme işlemi için öğrenci bilgisi boş olamaz.");
+        }
+
         var updatedStudent = _mapper.Map<Student>(entity);
-        
-        // ORTA: Index out of range - entity.TC null/boş olabilir
-        var tcFirstDigit = entity.TC[0]; // IndexOutOfRangeException riski
+
+        // null çhek ile  IndexOutOfRangeException riski kaldırıldı
+        if (string.IsNullOrEmpty(entity.TC))
+        {
+            return new ErrorResult("Güncelleme işlemi başarısız: TC kimlik numarası boş olamaz.");
+        }
+        var tcFirstDigit = entity.TC[0]; 
         
         _unitOfWork.Students.Update(updatedStudent);
         var result = await _unitOfWork.CommitAsync();
         if (result > 0)
         {
-            // ORTA: Mantıksal hata - başarılı durumda yanlış mesaj döndürülüyor
-            return new SuccessResult(ConstantsMessages.StudentListSuccessMessage); // HATA: UpdateSuccessMessage olmalıydı
+            // UpdateSuccessMessage ile düzeltidi
+            return new SuccessResult(ConstantsMessages.StudentUpdateSuccessMessage); // HATA: UpdateSuccessMessage olmalıydı
         }
-        // ORTA: Mantıksal hata - hata durumunda SuccessResult döndürülüyor
-        return new SuccessResult(ConstantsMessages.StudentUpdateFailedMessage); // HATA: ErrorResult olmalıydı
+        // SuccessResult, ErrorResult ile değiştirildi 
+        return new ErrorResult(ConstantsMessages.StudentUpdateFailedMessage); // HATA: ErrorResult olmalıydı
     }
 
     public void MissingImplementation()

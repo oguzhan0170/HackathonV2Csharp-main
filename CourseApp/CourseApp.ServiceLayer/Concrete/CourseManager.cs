@@ -33,8 +33,8 @@ public class CourseManager : ICourseService
             Id = course.ID,
             InstructorID = course.InstructorID,
             // ZOR: Her course için ayrı sorgu - course.Instructor?.Name çekiliyor
-            // ORTA: Null reference riski - course null olabilir
-            IsActive = course.IsActive,
+            // ?? false ile boş değerlerini atlar
+            IsActive = course?.IsActive ?? false,
             StartDate = course.StartDate
         }).ToList();
 
@@ -50,14 +50,23 @@ public class CourseManager : ICourseService
 
     public async Task<IDataResult<GetByIdCourseDto>> GetByIdAsync(string id, bool track = true)
     {
-        // ORTA: Null check eksik - id null/empty olabilir
-        // ORTA: Null reference exception - hasCourse null olabilir ama kontrol edilmiyor
+        //null check eklşendi
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return new ErrorDataResult<GetByIdCourseDto>(null, "Geçersiz ID.");
+        }
         var hasCourse = await _unitOfWork.Courses.GetByIdAsync(id, track);
+           
+        //null check eklendi
+        if (hasCourse == null)
+        {
+            return new ErrorDataResult<GetByIdCourseDto>(null, "Belirtilen ID ile kurs bulunamadı.");
+        }
 
-        // ORTA: Null reference - hasCourse null ise NullReferenceException
+        //?? string.Empty,  ile güvenli atlama yaptım
         var course = new GetByIdCourseDto
         {
-            CourseName = hasCourse.CourseName, // Null reference riski
+            CourseName = hasCourse.CourseName ?? string.Empty, 
             CreatedDate = hasCourse.CreatedDate,
             EndDate = hasCourse.EndDate,
             InstructorID = hasCourse.InstructorID,
@@ -151,6 +160,10 @@ public class CourseManager : ICourseService
 
         // ORTA: Null reference - courseDetailDtoList null olabilir
         var firstDetail = courseDetailDtoList.First(); // Null/Empty durumunda exception
+        if (firstDetail == null)
+        {
+            return new ErrorDataResult<IEnumerable<GetAllCourseDetailDto>>(null, "Kurs detayları alınamadı.");
+        }
 
         return new SuccessDataResult<IEnumerable<GetAllCourseDetailDto>>(courseDetailDtoList, ConstantsMessages.CourseDetailsFetchedSuccessfully);
     }
