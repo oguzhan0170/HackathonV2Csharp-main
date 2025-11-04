@@ -78,7 +78,14 @@ public class ExamManager : IExamService
 
     public async Task<IResult> Remove(DeleteExamDto entity)
     {
-        var deletedExamMapping = _mapper.Map<Exam>(entity); // ORTA SEVİYE: ID kontrolü eksik - entity ID'si null/empty olabilir
+        //mappingden gelen nesneye null check yapıldı
+        if (entity == null || string.IsNullOrEmpty(entity.Id))
+        {
+            return new ErrorResult("Silinecek sınav bilgisi yok.");
+        }
+
+        var deletedExamMapping = _mapper.Map<Exam>(entity); 
+
         _unitOfWork.Exams.Remove(deletedExamMapping);
         var result = await _unitOfWork.CommitAsync(); // ZOR SEVİYE: Transaction yok - başka işlemler varsa rollback olmaz
         if (result > 0)
