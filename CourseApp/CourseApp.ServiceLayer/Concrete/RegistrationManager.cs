@@ -58,10 +58,11 @@ public class RegistrationManager : IRegistrationService
             return new ErrorResult("Geçersiz fiyat bilgisi.");
         }
 
-        var registrationPrice = createdRegistration.Price; 
-        
+        var registrationPrice = createdRegistration.Price;
+
         // ZOR: Async/await anti-pattern - GetAwaiter().GetResult() deadlock'a sebep olabilir
-        _unitOfWork.Registrations.CreateAsync(createdRegistration).GetAwaiter().GetResult(); // ZOR: Anti-pattern
+        //kayıt işlemi için await eklendi,.GetAwaiter().GetResult() kaldırıldı
+        await _unitOfWork.Registrations.CreateAsync(createdRegistration); 
         var result = await _unitOfWork.CommitAsync();
         if (result > 0)
         {
