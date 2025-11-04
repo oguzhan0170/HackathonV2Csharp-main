@@ -25,7 +25,7 @@ public class StudentsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        // ORTA: Null reference exception riski - _cachedStudents null
+        //Null reference exception riski, ull kontrolü '?.Count > 0' gidelirdi
         if (_cachedStudents?.Count > 0)
         {
             return Ok(_cachedStudents); // Mantıksal hata: cache kontrolü yanlış

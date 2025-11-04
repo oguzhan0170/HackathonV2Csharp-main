@@ -40,11 +40,22 @@ public class InstructorsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreatedInstructorDto createdInstructorDto)
     {
-        // ORTA: Null check eksik - createdInstructorDto null olabilir
-        var instructorName = createdInstructorDto.Name; // Null reference riski
+        // Null check eklendi
+        if (createdInstructorDto == null)
+        {
+            return BadRequest("Eğitmen verisi yok.");
+        }
         
-        // ORTA: Index out of range - instructorName boş/null ise
-        var firstChar = instructorName[0]; // IndexOutOfRangeException riski
+        var instructorName = createdInstructorDto.Name;
+
+        // instructorName e null kontrolü eklendi IndexOutOfRangeException riski kaldırıldı
+        if (string.IsNullOrEmpty(instructorName))
+        {
+            return BadRequest("Eğitmen adı boş olamaz.");
+        }
+
+        // Güvenli hale getirildi — artık hata vermez
+        var firstChar = instructorName[0]; 
 
         // ORTA: Tip dönüşüm hatası - string'i int'e direkt cast
         //instructorName stirng ifade olarak tutuluyor zateb bu yüzden bu kod şu an için anlam ifade etmiyor 
