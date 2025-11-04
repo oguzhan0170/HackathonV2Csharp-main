@@ -75,8 +75,9 @@ public class StudentManager : IStudentService
         var studentName = createdStudent.Name; 
         
         await _unitOfWork.Students.CreateAsync(createdStudent);
-        // ZOR: Async/await anti-pattern - .Result kullanımı deadlock'a sebep olabilir
-        var result = _unitOfWork.CommitAsync().Result; // ZOR: Anti-pattern
+        // .Result kaldırıldı, await eklendi
+        var result = await _unitOfWork.CommitAsync(); 
+        
         if (result > 0)
         {
             return new SuccessResult(ConstantsMessages.StudentCreateSuccessMessage);
