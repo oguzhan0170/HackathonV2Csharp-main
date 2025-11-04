@@ -44,12 +44,27 @@ public class ExamResultManager : IExamResultService
 
     public async Task<IResult> CreateAsync(CreateExamResultDto entity)
     {
-        // ORTA: Null check eksik - entity null olabilir
+        // entity null check
+        if (entity == null)
+        {
+            return new ErrorResult("Sınav sonucu yok.");
+        }
+
+        //addedExamResultMapping null check
         var addedExamResultMapping = _mapper.Map<ExamResult>(entity);
-        // ORTA: Null reference - addedExamResultMapping null olabilir
+        if (addedExamResultMapping == null)
+        {
+            return new ErrorResult("ExamResult işlemi başarısız oldu.");
+        }
+
         // score yerine grade yazdım
-        var grade = addedExamResultMapping.Grade; // Null reference riski
-        
+        var grade = addedExamResultMapping.Grade; 
+        //grade null check
+        if (addedExamResultMapping.Grade < 0 || addedExamResultMapping.Grade > 100)
+        {
+            return new ErrorResult("Geçersiz not değeri. 0 ile 100 arasında olmalıdır.");
+        }
+
         await _unitOfWork.ExamResults.CreateAsync(addedExamResultMapping);
         // ZOR: Async/await anti-pattern - GetAwaiter().GetResult() deadlock'a sebep olabilir
         var result = _unitOfWork.CommitAsync().GetAwaiter().GetResult(); // ZOR: Anti-pattern
@@ -99,9 +114,13 @@ public class ExamResultManager : IExamResultService
         }
 
         var examResultListMapping = _mapper.Map<IEnumerable<GetAllExamResultDetailDto>>(examResultList);
-        
-        // ORTA: Index out of range - examResultListMapping boş olabilir
-        var firstResult = examResultListMapping.ToList()[0]; // IndexOutOfRangeException riski
+        //examResultListMapping null check
+        if (examResultListMapping == null || !examResultListMapping.Any())
+        {
+            return new ErrorDataResult<IEnumerable<GetAllExamResultDetailDto>>(null,"ExamResult mapping işlemi başarısız veya veri bulunamadı.");
+        }
+
+        var firstResult = examResultListMapping.ToList()[0];
         
         return new SuccessDataResult<IEnumerable<GetAllExamResultDetailDto>>(examResultListMapping, ConstantsMessages.ExamResultListSuccessMessage);
     }
