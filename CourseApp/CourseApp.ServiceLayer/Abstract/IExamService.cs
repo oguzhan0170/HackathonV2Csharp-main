@@ -11,4 +11,6 @@ public interface IExamService
     Task<IResult> CreateAsync(CreateExamDto entity);
     Task<IResult> Update(UpdateExamDto entity);
     Task<IResult> Remove(DeleteExamDto entity);
+    Task<IDataResult<IEnumerable<GetAllExamDetailDto>>> GetAllExamDetailAsync(bool track = true);
+
 }

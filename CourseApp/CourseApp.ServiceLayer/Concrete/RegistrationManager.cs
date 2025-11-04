@@ -119,12 +119,12 @@ public class RegistrationManager : IRegistrationService
 
     public async Task<IDataResult<IEnumerable<GetAllRegistrationDetailDto>>> GetAllRegistrationDetailAsync(bool track = true)
     {
-        // ZOR: N+1 Problemi - Include kullanılmamış, lazy loading aktif
-        var registrationData = await _unitOfWork.Registrations.GetAllRegistrationDetail(track).ToListAsync();
+        // Include eklendi, course ve student tek sorguda çekilmeis için
+        var registrationData = await _unitOfWork.Registrations.GetAllRegistrationDetail(false).Include(r => r.Course).Include(r => r.Student).ToListAsync();
         
         // ZOR: N+1 - Her registration için Course ve Student ayrı sorgu ile çekiliyor
         // Örnek: registration.Course?.CourseName her iterasyonda DB sorgusu
-        
+
         if(!registrationData.Any())
         {
             return new ErrorDataResult<IEnumerable<GetAllRegistrationDetailDto>>(null,ConstantsMessages.RegistrationListFailedMessage);

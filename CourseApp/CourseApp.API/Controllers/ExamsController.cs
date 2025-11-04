@@ -18,21 +18,20 @@ public class ExamsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        // ZOR: N+1 Problemi - Her exam için ayrı sorgu
-        var result = await _examService.GetAllAsync();
-        if (result.Success)
+        // Tek sorguda tüm exam detaylarını almak için service katmanında Include kullanıldı
+        var result = await _examService.GetAllExamDetailAsync();
+
+        if (result == null)
         {
-            // ORTA: Null reference - result.Data null olabilir
-            var exams = result.Data.ToList();
-            // ZOR: N+1 - Her exam için ayrı sorgu (örnek - gerçek implementasyon service layer'da olabilir)
-            foreach (var exam in exams)
-            {
-                // Her exam için ayrı sorgu atılıyor - Include kullanılmamalıydı
-                var details = await _examService.GetByIdAsync(exam.Id);
-            }
-            return Ok(result);
+            return BadRequest(new { Message = "Sınav listesi alınamadı." });
         }
-        return BadRequest(result);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]

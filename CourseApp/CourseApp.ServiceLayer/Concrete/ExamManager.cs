@@ -106,4 +106,18 @@ public class ExamManager : IExamService
         }
         return new ErrorResult(ConstantsMessages.ExamUpdateFailedMessage);
     }
+
+    //arabirim görmke için 
+    public async Task<IDataResult<IEnumerable<GetAllExamDetailDto>>> GetAllExamDetailAsync(bool track = true)
+    {
+        var examList = await _unitOfWork.Exams.GetAll(false).Include(e => e.Student).Include(e => e.ExamResults).AsNoTracking().ToListAsync();
+
+        if (examList == null || !examList.Any())
+            return new ErrorDataResult<IEnumerable<GetAllExamDetailDto>>(null, "Sınav detayları bulunamadı.");
+
+        var mapped = _mapper.Map<IEnumerable<GetAllExamDetailDto>>(examList);
+        return new SuccessDataResult<IEnumerable<GetAllExamDetailDto>>(mapped, "Sınav detayları başarıyla getirildi.");
+
+    }
+
 }

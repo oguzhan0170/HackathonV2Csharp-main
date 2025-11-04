@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CourseApp.DataAccessLayer\CourseApp.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\EntityLayer\CourseApp.EntityLayer.csproj" />
   </ItemGroup>
 
 </Project>
