@@ -54,7 +54,6 @@ public class InstructorsController : ControllerBase
             return BadRequest("Eğitmen adı boş olamaz.");
         }
 
-        // Güvenli hale getirildi — artık hata vermez
         var firstChar = instructorName[0]; 
 
         // ORTA: Tip dönüşüm hatası - string'i int'e direkt cast
