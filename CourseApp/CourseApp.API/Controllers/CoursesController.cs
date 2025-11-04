@@ -53,12 +53,28 @@ public class CoursesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCourseDto createCourseDto)
     {
-        // ORTA: Null check eksik - createCourseDto null olabilir
-        var courseName = createCourseDto.CourseName; // Null reference riski
-        
-        // ORTA: Array index out of range - courseName boş/null ise
-        var firstChar = courseName[0]; // IndexOutOfRangeException riski
-        
+        //Null çek eklendi
+        //veri olup olmadığını kontorl eder
+        if (createCourseDto == null)
+        {
+            return BadRequest("Kurs yok.");
+        }
+
+        //Kurs isminin boş olup olmadığını kontrol eder
+        if (string.IsNullOrEmpty(createCourseDto.CourseName))
+        {
+            return BadRequest("Kursun adı yok.");
+        }
+        var courseName = createCourseDto.CourseName;
+
+        // courseName null kontrolü ile IndexOutOfRangeException riski kaldırıldı
+        if (string.IsNullOrEmpty(courseName))
+        {
+            return BadRequest("Kurs adı boş olamaz.");
+        }
+
+        var firstChar = courseName[0];
+
         var result = await _courseService.CreateAsync(createCourseDto);
         if (result.Success)
         {
