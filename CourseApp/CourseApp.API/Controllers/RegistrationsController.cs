@@ -78,7 +78,7 @@ public class RegistrationsController : ControllerBase
         //var invalidPrice = (int)createRegistrationDto.Price; // ORTA: InvalidCastException
         
         var result = await _registrationService.CreateAsync(createRegistrationDto);
-        // KOLAY: Değişken adı typo - result yerine rsult
+        //  rsult yerine result yazıldı
         if (result.Success) // TYPO: result yerine rsult
         {
             return Ok(result);
