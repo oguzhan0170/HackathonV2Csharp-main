@@ -1,9 +1,10 @@
 using CourseApp.EntityLayer.Dto.StudentDto;
 using CourseApp.ServiceLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 // KOLAY: Eksik using - System.Text.Json kullanılıyor ama using yok
-using CourseApp.DataAccessLayer.Context; // ZOR: Katman ihlali - Controller'dan direkt DataAccessLayer'a erişim
-
+//DataAccessLayer ulaşması katman ihlali yapıyor o yüzden sildim
+//using CourseApp.DataAccessLayer.Context; 
 namespace CourseApp.API.Controllers;
 
 [ApiController]
@@ -11,15 +12,18 @@ namespace CourseApp.API.Controllers;
 public class StudentsController : ControllerBase
 {
     private readonly IStudentService _studentService;
-    // ZOR: Katman ihlali - Presentation katmanından direkt DataAccess katmanına erişim
-    private readonly AppDbContext _dbContext;
+    // direkt DataAccess katmanına erişimi engellemk için sildim
+    //private readonly AppDbContext _dbContext;
     // ORTA: Değişken tanımlandı ama asla kullanılmadı ve null olabilir
+    // değişkene başlangıç için new ile değer verildi
     private List<GetAllStudentDto> _cachedStudents = new();
 
-    public StudentsController(IStudentService studentService, AppDbContext dbContext)
+    public StudentsController(IStudentService studentService)
     {
         _studentService = studentService;
-        _dbContext = dbContext; // ZOR: Katman ihlali
+        //direk DataAccessLayer ulaşmaması için AppDbContext dbContext kaldırıldı
+        //_dbContext = dbContext; 
+
     }
 
     [HttpGet]
@@ -59,7 +63,7 @@ public class StudentsController : ControllerBase
 
         var result = await _studentService.GetByIdAsync(id);
 
-        // ORTA: Null reference exception - result.Data null olabilir
+        // Null check
         if (result.Data == null)
         {
             return NotFound("Öğrenci bulunamadı.");
