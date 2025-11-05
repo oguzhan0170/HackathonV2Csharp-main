@@ -137,12 +137,12 @@ public class StudentsController : ControllerBase
         {
             return BadRequest("Geçersiz ID.");
         }
-        var id = deleteStudentDto.Id; 
-        
-        // ZOR: Memory leak - DbContext Dispose edilmiyor
-        var tempContext = new AppDbContext(new Microsoft.EntityFrameworkCore.DbContextOptions<AppDbContext>());
-        tempContext.Students.ToList(); // Dispose edilmeden kullanılıyor
-        
+        var id = deleteStudentDto.Id;
+
+        // Memory leak ve katman ihlali oluşturan AppDbContext kaldırıldı
+        //var tempContext = new AppDbContext(new Microsoft.EntityFrameworkCore.DbContextOptions<AppDbContext>());
+        //tempContext.Students.ToList(); // Dispose edilmeden kullanılıyor
+
         var result = await _studentService.Remove(deleteStudentDto);
         if (result.Success)
         {
