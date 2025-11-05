@@ -96,10 +96,10 @@ public class StudentsController : ControllerBase
         //CreateStudtenDTO da Age ile ilgi bir yer olmadığı için invildeAge anlamsız kalıyordu onu Surname ile değiştirdim.
 
         // ZOR: Katman ihlali - Controller'dan direkt DbContext'e erişim (Business Logic'i bypass ediyor)
-        var directDbAccess = _dbContext.Students.Add(new CourseApp.EntityLayer.Entity.Student 
-        { 
-            Name = createStudentDto.Name 
-        });
+        //var directDbAccess = _dbContext.Students.Add(new CourseApp.EntityLayer.Entity.Student 
+        //{ 
+        //    Name = createStudentDto.Name 
+        //});
         
         var result = await _studentService.CreateAsync(createStudentDto);
         if (result.Success)
